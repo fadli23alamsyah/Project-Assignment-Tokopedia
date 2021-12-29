@@ -23,7 +23,7 @@ const useStyles = makeStyles({
         }
     },
     tab:{
-        '& .css-heg063-MuiTabs-flexContainer':{
+        '& .MuiTabs-flexContainer':{
             justifyContent: 'center' 
         } 
     }

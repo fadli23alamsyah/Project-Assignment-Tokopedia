@@ -1,7 +1,8 @@
 import React from "react"
-import{ Container, Typography, Grid, Box } from "@mui/material"
+import{ Container, Typography, Grid, Box, Dialog, DialogActions, DialogContent, DialogTitle, Button, Snackbar, Alert } from "@mui/material"
 import { makeStyles } from "@mui/styles"
 import ItemListMyPokemonMobile from '../../component/mobile/itemListMyPokemonMobile'
+import { ucwords } from "../../utils/fontHandler"
 
 const useStyles = makeStyles({
     background: {
@@ -25,6 +26,12 @@ const useStyles = makeStyles({
 
 function MyPokemon(){
     const classes = useStyles()
+    const [id, setId] = React.useState()
+    const [name, setName] = React.useState('')
+    const [open, setOpen] = React.useState(false)
+    const [openAlert, setOpenAlert] = React.useState(false)
+    const [messsageAlert, setMesssageAlert] = React.useState('')
+    const [statusAlert, setStatusAlert] = React.useState('success')
     const [mypokemon, setMypokemon] = React.useState(() => {
         const saved = localStorage.getItem("mypokemon");
         if (saved) {
@@ -40,11 +47,34 @@ function MyPokemon(){
         },[mypokemon]
     )
 
-    const handleReleaseClick = (id)=>{
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenAlert(false)
+    }
+
+    const handleReleaseClick = (id, name )=>{
+        setOpen(true)
+        setId(id)
+        setName(name)
+    }
+
+    const releasePokemon = ()=>{
         const removeItem = mypokemon.filter((pokemon) => {
             return pokemon.id !== id;
         });
         setMypokemon(removeItem);
+
+        setOpen(false)
+        setOpenAlert(true)
+        setMesssageAlert('Release Pokemon')
+        setStatusAlert('success')
     }
 
     return (
@@ -61,6 +91,21 @@ function MyPokemon(){
                     ))
                 }
             </Grid>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Release {ucwords(name)}</DialogTitle>
+                <DialogContent>
+                    Do you want to release your pokemon ?
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={releasePokemon}>Release</Button>
+                </DialogActions>
+            </Dialog>
+            <Snackbar open={openAlert} anchorOrigin={{ vertical:'bottom', horizontal:'right' }} autoHideDuration={4000} onClose={handleCloseAlert} sx={{ bottom: { xs: 90, sm: 0 } }}>
+                <Alert severity={statusAlert}>
+                    {messsageAlert}
+                </Alert>
+            </Snackbar>
         </Container>
     )
 }

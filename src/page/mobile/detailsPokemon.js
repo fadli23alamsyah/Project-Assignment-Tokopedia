@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate, useParams, useLocation } from "react-router-dom"
-import { AppBar, Toolbar, Box, IconButton, Typography, Paper, Tab, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material'
+import { AppBar, Toolbar, Box, IconButton, Typography, Paper, Tab, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Snackbar, Alert } from '@mui/material'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
@@ -40,6 +40,9 @@ function DetailsPokemon(){
     const [types, setTypes] = React.useState([])
     const [tab, setTab] = React.useState('1')
     const [open, setOpen] = React.useState(false);
+    const [openAlert, setOpenAlert] = React.useState(false);
+    const [messsageAlert, setMesssageAlert] = React.useState('');
+    const [statusAlert, setStatusAlert] = React.useState('success');
     const [nickname, setNickname] = React.useState("");
     const [mypokemon, setMypokemon] = React.useState(() => {
         const saved = localStorage.getItem("mypokemon");
@@ -58,7 +61,9 @@ function DetailsPokemon(){
         if (Math.random() >= 0.5) {
             setOpen(true)
         } else {
-            alert(" Catch " + name + " Failed. Please Try Again");
+            setOpenAlert(true)
+            setStatusAlert('warning')
+            setMesssageAlert('Catch ' + name +' Failed. Please Try Again')
             return false;
         }
     }
@@ -66,6 +71,14 @@ function DetailsPokemon(){
     const handleClose = () => {
         setOpen(false)
     }
+
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenAlert(false)
+    };
 
     const savePokemon = () => {
         if(nickname !== ""){
@@ -80,7 +93,11 @@ function DetailsPokemon(){
             ])
             setNickname("")
             setOpen(false)
-            alert('Stored Your Pokemon')
+
+            // alert
+            setOpenAlert(true)
+            setStatusAlert('success')
+            setMesssageAlert('Stored Your Pokemon')
         }
     }
 
@@ -188,6 +205,11 @@ function DetailsPokemon(){
                     <Button onClick={savePokemon}>Save</Button>
                 </DialogActions>
             </Dialog>
+            <Snackbar open={openAlert} anchorOrigin={{ vertical:'bottom', horizontal:'right' }} autoHideDuration={4000} onClose={handleCloseAlert}>
+                <Alert severity={statusAlert}>
+                    {messsageAlert}
+                </Alert>
+            </Snackbar>
         </Box>
     )
 }

@@ -1,8 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
+import {ucwords} from './utils/fontHandler'
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+test('Testing Uppercase First Char', ()=> {
+  expect(ucwords('test')).toBe('Test')
+})

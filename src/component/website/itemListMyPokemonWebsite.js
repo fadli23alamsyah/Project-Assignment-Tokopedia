@@ -6,6 +6,11 @@ import { Favorite } from '@mui/icons-material'
 
 const useStyles = makeStyles({
     bgImage:{
+        cursor: 'pointer',
+        backgroundColor: '#A9E4D7', 
+        borderRadius: "8px", 
+        position: 'relative', 
+        zIndex: 1,
         '&::before':{
             content: '""',
             position: 'absolute',
@@ -30,10 +35,10 @@ function ItemListMyPokemonWebsite({data, onReleaseClick}) {
     const classes = useStyles()
 
     return (
-        <Card className={classes.bgImage} sx={{backgroundColor: '#A9E4D7', borderRadius: "8px", position: 'relative', zIndex: 1,}} >
+        <Card className={classes.bgImage}>
             <CardHeader className={classes.titleCard} title={ucwords(data.name)} sx={{pb: 0, color: "#fff",}} 
                 action={
-                    <IconButton aria-label="add to favorites" onClick={()=>onReleaseClick(data.id)}>
+                    <IconButton aria-label="add to favorites" onClick={()=>onReleaseClick(data.id, data.name)}>
                         <Favorite fontSize="small" htmlColor="pink"/>
                     </IconButton>
                 }
